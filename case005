@@ -1,0 +1,64 @@
+Plugin Conflict Case 005 — Outdated Plugin + New WordPress Version
+Date: June 2026
+Category: WordPress Core / Plugin Compatibility / PHP Error
+Status: ✅ Resolved
+Severity: High
+1. Problem Description
+After updating WordPress to latest version, site showing PHP deprecated warnings across all pages. Specific plugin features stopped working. Admin area showing error notices. In some cases, white screen appearing on certain pages where the outdated plugin is active.
+2. Environment
+WordPress Version: Updated to 6.5 (from 6.2)
+Problematic Plugin: Custom plugin not updated in 2+ years
+PHP Version: 8.1
+Symptoms: Deprecated warnings, broken features, white screen on some pages
+3. Root Cause
+WordPress 6.5 dropped support for several old PHP functions and deprecated many hooks and filters that older plugins rely on. When WordPress core updated, it removed or changed functions that the outdated plugin was calling. PHP 8.1 is also stricter than older PHP versions — functions that worked silently before now throw fatal errors. The plugin developer had not updated the plugin to maintain compatibility.
+4. Troubleshooting Steps
+✅ Enabled WP_DEBUG to see actual errors
+✅ Identified specific deprecated function causing the issue
+✅ Deactivated outdated plugin — all errors disappeared
+✅ Checked plugin's last update date: 3 years ago
+✅ Checked plugin support forum: many users reporting same issue
+5. Solution
+Step 1: Enable WP_DEBUG to identify the problem
+Add to wp-config.php:
+
+define('WP_DEBUG', true);
+define('WP_DEBUG_LOG', true);
+define('WP_DEBUG_DISPLAY', false);
+
+Check /wp-content/debug.log for specific error
+Step 2: Check plugin's update history
+WordPress admin → Plugins → check "Last Updated" date
+If not updated in 1+ year — compatibility risk is high
+Step 3: Check plugin support forum
+wordpress.org/plugins/[plugin-name]/#reviews
+Look for reports of same issue after WordPress update
+Step 4: Find an alternative plugin
+Search wordpress.org for plugins with:
+Updated within last 3 months
+Compatible with your WordPress version
+4+ star rating
+Active installations 10,000+
+Step 5: If no alternative exists — contact plugin developer
+Leave a support thread on plugin's wordpress.org page
+Describe the exact error from debug.log
+Step 6: Temporary fix if plugin is critical
+Downgrade WordPress version temporarily (not recommended long term)
+Or hire a developer to patch the specific deprecated function
+Step 7: After replacing plugin
+Disable WP_DEBUG:
+
+define('WP_DEBUG', false);
+
+Why This Happened
+WordPress regularly removes old deprecated functions with major version updates. Plugin developers must update their code to maintain compatibility. When a plugin is abandoned or rarely maintained, it becomes incompatible with newer WordPress versions. PHP version upgrades (7.4 → 8.0 → 8.1) also introduce breaking changes that outdated plugins cannot handle.
+7. Resolution Status
+✅ Replacing outdated plugin with actively maintained alternative resolves the issue.
+8. Prevention Tips
+Always check plugin compatibility before updating WordPress core
+Use Health Check & Troubleshooting plugin to test updates safely
+Never run plugins not updated in more than 1 year on production sites
+Enable automatic plugin updates for trusted plugins
+Always backup before major WordPress version updates (UpdraftPlus)
+Check wordpress.org/about/roadmap for upcoming WordPress changes
+Test all updates on staging site before applying to live site

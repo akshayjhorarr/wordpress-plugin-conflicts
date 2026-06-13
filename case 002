@@ -1,0 +1,46 @@
+Plugin Conflict Case 002 — Two SEO Plugins Active Simultaneously
+Date: June 2026
+Category: SEO / Plugin Conflict / Meta Data
+Status: ✅ Resolved
+Severity: Medium
+1. Problem Description
+Site showing duplicate meta titles and descriptions in Google search results. XML sitemap returning errors. Some pages showing conflicting canonical URLs. Google Search Console reporting duplicate content warnings.
+2. Environment
+WordPress Version: 6.5
+SEO Plugin 1: Yoast SEO
+SEO Plugin 2: All in One SEO (AIOSEO)
+Both plugins active simultaneously
+Symptoms: Duplicate meta tags, sitemap conflicts, canonical URL issues
+3. Root Cause
+Both Yoast SEO and All in One SEO inject meta tags, generate XML sitemaps, and set canonical URLs. When both are active, they both output their own meta tags — resulting in duplicate title tags, duplicate description tags, and two competing sitemaps. Google sees this as conflicting signals and may penalize the site or ignore both.
+4. Troubleshooting Steps
+✅ Checked page source (Ctrl+U) — found duplicate meta title tags
+✅ Found two sitemap URLs in robots.txt
+✅ Deactivated one SEO plugin — duplicates disappeared
+✅ Confirmed both plugins were generating separate meta output
+5. Solution
+Step 1: Decide which SEO plugin to keep
+Yoast SEO — better for beginners, more tutorials available
+AIOSEO — better for advanced users, more features
+Step 2: Export settings from plugin you want to keep
+Yoast SEO → Tools → Export settings → Save file
+Step 3: Deactivate and delete the other plugin
+Plugins → find unwanted SEO plugin → Deactivate → Delete
+Step 4: Verify only one set of meta tags exists
+Visit any page → Right click → View Page Source
+Search for "og:title" — should appear only once
+Step 5: Resubmit sitemap to Google Search Console
+Google Search Console → Sitemaps → Remove old sitemap
+Add new sitemap URL from remaining plugin
+Step 6: Request re-indexing
+Google Search Console → URL Inspection → Request Indexing
+Do this for homepage and key pages
+6. Why This Happened
+User installed AIOSEO first, then installed Yoast SEO without deactivating AIOSEO. Both plugins hooked into the same WordPress actions (wp_head) to output meta tags, resulting in duplicate output. Most users do not realize two SEO plugins cannot coexist.
+7. Resolution Status
+✅ Keeping only one SEO plugin resolves all duplicate meta and sitemap issues.
+8. Prevention Tips
+Never have two SEO plugins active at the same time
+Before installing a new SEO plugin, deactivate and delete the old one
+Always check page source after installing an SEO plugin
+Regularly audit installed plugins for overlapping functionality

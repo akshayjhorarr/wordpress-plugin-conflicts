@@ -1,0 +1,50 @@
+Plugin Conflict Case 003 — Security Plugin Breaking Login
+Date: June 2026
+Category: Security / Login / Admin Access
+Status: ✅ Resolved
+Severity: High
+1. Problem Description
+WordPress admin completely locked out after installing Wordfence security plugin. Login page showing blank white screen or redirect loop. Even correct credentials not working. Other users also unable to log in.
+2. Environment
+WordPress Version: 6.5
+Security Plugin: Wordfence Security
+Symptoms: Login page blank, redirect loop, admin lockout
+Triggered after: Installing Wordfence and enabling all security features
+3. Root Cause
+Wordfence's login security features — particularly Two Factor Authentication and reCAPTCHA — can conflict with custom login page plugins or certain themes. Additionally, Wordfence's IP blocking can accidentally block the site owner's own IP address if too many failed login attempts were made during setup. The firewall rules can also interfere with session handling.
+4. Troubleshooting Steps
+✅ Tried login from different browser — same issue
+✅ Tried login from mobile data (different IP) — worked partially
+✅ Confirmed IP blocking was the cause
+✅ Renamed Wordfence plugin folder via FTP — login restored
+5. Solution
+Step 1: Check if IP is blocked
+Try logging in from mobile data (different IP)
+If it works — your IP is blocked by Wordfence
+Step 2: Temporarily disable Wordfence via FTP
+Connect via FTP → go to /wp-content/plugins/
+Rename wordfence folder to wordfence-disabled
+Try logging in to WordPress admin
+If successful — Wordfence was causing the issue
+Step 3: Unblock your IP in Wordfence
+Wordfence → Firewall → Blocking → find your IP → Remove block
+Step 4: Whitelist your IP address
+Wordfence → All Options → General Wordfence Options
+Add your IP to whitelisted IP addresses:
+Code
+Find your IP at: whatismyip.com
+Step 5: Disable conflicting features
+Wordfence → Login Security → disable 2FA temporarily
+Re-enable one feature at a time and test login each time
+Step 6: Rename plugin folder back
+FTP → rename wordfence-disabled back to wordfence
+6. Why This Happened
+Wordfence automatically blocks IPs after multiple failed login attempts. During initial setup, if wrong credentials were entered a few times, Wordfence blocked the IP. The login page appeared blank because Wordfence's firewall was intercepting the request before WordPress could load the login form.
+7. Resolution Status
+✅ Whitelisting admin IP and reconfiguring Wordfence login security resolves the issue.
+8. Prevention Tips
+Always whitelist your own IP address immediately after installing Wordfence
+Enable 2FA only after confirming basic login works correctly
+Keep FTP access available as emergency backup when installing security plugins
+Test login from incognito window after every Wordfence configuration change
+Never install security plugins on Friday — give yourself time to troubleshoot

@@ -1,0 +1,49 @@
+Plugin Conflict Case 001 — WooCommerce + Caching Plugin
+Date: June 2026
+Category: WooCommerce / Caching / Checkout
+Status: ✅ Resolved
+Severity: High
+1. Problem Description
+WooCommerce checkout page showing cached version to logged-in users. Cart items disappearing after page refresh. Payment not processing correctly. Customer orders not completing despite payment being taken.
+2. Environment
+WordPress Version: 6.5
+WooCommerce Version: 8.4
+Caching Plugin: W3 Total Cache / WP Super Cache
+Symptoms: Cart empty, checkout broken, orders not completing
+3. Root Cause
+Caching plugins serve static cached pages to all visitors including logged-in customers. WooCommerce checkout, cart, and account pages are dynamic — they must show different content for each user. When caching serves a static version of these pages, cart data gets lost, sessions break, and payments fail.
+4. Troubleshooting Steps
+✅ Deactivated all plugins except WooCommerce — checkout worked
+✅ Reactivated plugins one by one — problem returned with caching plugin
+✅ Confirmed: Caching plugin serving static checkout page
+❌ Simply clearing cache did not permanently fix it
+5. Solution
+Step 1: Exclude WooCommerce pages from cache
+Go to caching plugin settings → Page Cache → Exclude URLs
+Add these URLs:
+/cart/
+/checkout/
+/my-account/
+/woocommerce-checkout/
+/?wc-ajax=
+
+Step 2: Enable WooCommerce cart fragment caching
+In W3 Total Cache:
+Browser Cache → Don't cache pages for known users → Enable
+In WP Super Cache:
+Advanced → Don't cache pages with GET parameters → Enable
+Step 3: Clear all existing cache
+Caching plugin → Clear all cache
+WooCommerce → System Status → Tools → Clear transients
+Step 4: Test checkout flow
+Open incognito window → Add product to cart → Proceed to checkout
+Verify cart items persist through checkout
+6. Why This Happened
+WooCommerce uses PHP sessions and cookies to manage cart data. Caching plugins bypass PHP and serve static HTML files. When a cached checkout page loads, it has no access to the user's session data — so cart appears empty and orders cannot complete.
+7. Resolution Status
+✅ Excluding WooCommerce pages from cache resolves the issue permanently.
+8. Prevention Tips
+Always exclude cart, checkout, my-account pages from cache
+After installing any caching plugin, immediately test WooCommerce checkout
+Use WooCommerce-compatible caching plugins (LiteSpeed Cache works best)
+Test checkout flow in incognito after every caching configuration change

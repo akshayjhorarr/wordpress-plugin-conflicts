@@ -1,0 +1,49 @@
+Plugin Conflict Case 004 — Page Builder + Theme Conflict
+Date: June 2026
+Category: Theme / Page Builder / Frontend Display
+Status: ✅ Resolved
+Severity: Medium
+1. Problem Description
+After installing Elementor page builder, site frontend showing broken layout. Header and footer disappeared on pages built with Elementor. CSS styling completely broken — text overlapping, images misaligned. Theme customizations not showing on Elementor pages.
+2. Environment
+WordPress Version: 6.5
+Theme: Divi (by Elegant Themes)
+Page Builder: Elementor
+Symptoms: Broken layout, missing header/footer, CSS conflicts
+3. Root Cause
+Divi theme has its own built-in page builder (Divi Builder). When Elementor is installed alongside Divi, both builders load their own CSS frameworks and JavaScript libraries. These conflict with each other — Divi's CSS overrides Elementor's styling and vice versa. Additionally, Divi's template system conflicts with Elementor's canvas mode, causing header and footer to disappear.
+4. Troubleshooting Steps
+✅ Switched to Twenty Twenty-Four theme — Elementor worked perfectly
+✅ Confirmed issue only with Divi theme
+✅ Disabled Divi Builder — partial improvement
+✅ Identified CSS specificity conflicts in browser DevTools
+5. Solution
+Option A: Use only one page builder (Recommended)
+Choose either Divi Builder OR Elementor — not both
+If keeping Elementor: Switch to Elementor-compatible theme
+Best free themes for Elementor: Hello Elementor, Astra, OceanWP
+If keeping Divi: Deactivate and delete Elementor completely
+Option B: Use Elementor with Divi theme carefully
+Step 1: In Elementor → edit page → Settings → Page Layout → Elementor Canvas
+This removes Divi's header/footer interference
+Step 2: Add custom header/footer using Elementor Pro Header Footer builder
+Step 3: Add this CSS to fix conflicts:
+.elementor-page .et_pb_section {
+    padding: 0 !important;
+}
+.elementor-widget-container {
+    font-family: inherit !important;
+}
+
+Step 4: Clear all cache and test
+6. Why This Happened
+Divi and Elementor are both "full site" builders that want complete control over the page output. They both hook into the_content filter, enqueue their own CSS/JS, and modify template structure. Running both simultaneously creates an irresolvable CSS specificity war and JavaScript conflicts.
+7. Resolution Status
+✅ Using only one page builder permanently resolves all conflicts.
+✅ Hello Elementor theme + Elementor is the most conflict-free combination.
+8. Prevention Tips
+Never install two page builders on the same site
+Before installing Elementor, check if your theme has a built-in builder
+Always test new page builders on a staging site first
+Check plugin compatibility at wordpress.org before installing
+Elementor's official compatible themes list: elementor.com/blog/elementor-themes
